@@ -12,10 +12,9 @@ class FailedState<T>(message: String?) : ApiState<T>(message, null) {
     }
 }
 
-class ErrorState<T>(message: String?, data: T?) : ApiState<T>(message, data) {
+class ErrorState<T>(message: String?) : ApiState<T>(message, null) {
     init {
-        val exception: Exception = data as Exception
-        Log.e(this.javaClass.name, "ErrorState() \t message: $message \t ${exception.stackTrace}")
+        Log.e(this.javaClass.name, "ErrorState() \t message: $message")
     }
 }
 

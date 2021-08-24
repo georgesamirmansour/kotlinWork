@@ -13,6 +13,7 @@ import com.example.nagwatask.models.LoadingState
 import com.example.nagwatask.models.SuccessState
 import com.example.nagwatask.models.file.FileMapper
 import com.example.nagwatask.models.file.FileResponse
+import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
@@ -24,8 +25,9 @@ class MainRepo @Inject constructor(private val networkModel: NetworkModule){
         mediatorResponse.value = LoadingState()
         val source: LiveData<ApiState<List<FileMapper>>> = LiveDataReactiveStreams.fromPublisher(
             networkModel.provideServiceInterface()
-                .getAllFiles().doOnError { handleError(it) }.map { handleResponse(it) }
+                .getAllFiles().onErrorReturn { handleError(it) }.map { handleResponse(it) }
                 .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
         )
         mediatorResponse.addSource(source, Observer {
             mediatorResponse.value = it
@@ -36,7 +38,7 @@ class MainRepo @Inject constructor(private val networkModel: NetworkModule){
 
     private fun handleError(throwable: Throwable?): List<FileResponse> {
         Log.e(MainRepo::class.simpleName, "handleError: ", throwable)
-        mediatorResponse.value = ErrorState(throwable?.message, ArrayList())
+        mediatorResponse.value = ErrorState(throwable?.stackTraceToString())
         return ArrayList()
     }
 

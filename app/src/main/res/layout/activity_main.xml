@@ -10,7 +10,7 @@
         android:id="@+id/file_recycler"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:listitem="@layout/main_item"
+        tools:listitem="@layout/file_item"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         android:paddingBottom="12dp"
         android:clipToPadding="false"/>

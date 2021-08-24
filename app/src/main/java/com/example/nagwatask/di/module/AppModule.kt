@@ -1,6 +1,5 @@
 package com.example.nagwatask.di.module
 
-import com.example.nagwatask.data.mian.MainRepo
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton

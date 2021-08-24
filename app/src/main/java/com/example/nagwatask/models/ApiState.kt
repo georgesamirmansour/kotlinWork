@@ -1,6 +1,7 @@
 package com.example.nagwatask.models
 
 import android.util.Log
+import com.example.nagwatask.models.file.DownloadMapper
 import java.lang.Exception
 
 
@@ -18,4 +19,5 @@ class ErrorState<T>(message: String?) : ApiState<T>(message, null) {
     }
 }
 
-class SuccessState<T>(message: String?, data: T?) : ApiState<T>(message, data)
+class SuccessState<T>(message: String, data: T?) : ApiState<T>(message, data)
+class ProgressState<T>(message: String, data: T?) : ApiState<T>(message, data)

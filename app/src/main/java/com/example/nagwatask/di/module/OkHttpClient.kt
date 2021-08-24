@@ -2,8 +2,10 @@ package com.example.nagwatask.di.module
 
 import dagger.Module
 import dagger.Provides
+import okhttp3.Cache
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
+import java.io.File
 import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 @Module

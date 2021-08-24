@@ -4,8 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.main.MainActivity"
-    android:animateLayoutChanges="true">
+    tools:context=".ui.main.MainActivity">
 
     <com.facebook.shimmer.ShimmerFrameLayout
         android:id="@+id/shimmer_file_layout"
@@ -19,41 +18,61 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <include layout="@layout/file_shimmer_layout"/>
+            <include layout="@layout/file_shimmer_layout" />
 
-            <include layout="@layout/file_shimmer_layout"/>
+            <include layout="@layout/file_shimmer_layout" />
 
-            <include layout="@layout/file_shimmer_layout"/>
+            <include layout="@layout/file_shimmer_layout" />
 
-            <include layout="@layout/file_shimmer_layout"/>
+            <include layout="@layout/file_shimmer_layout" />
 
-            <include layout="@layout/file_shimmer_layout"/>
+            <include layout="@layout/file_shimmer_layout" />
 
-            <include layout="@layout/file_shimmer_layout"/>
+            <include layout="@layout/file_shimmer_layout" />
 
-            <include layout="@layout/file_shimmer_layout"/>
+            <include layout="@layout/file_shimmer_layout" />
 
-            <include layout="@layout/file_shimmer_layout"/>
+            <include layout="@layout/file_shimmer_layout" />
 
-            <include layout="@layout/file_shimmer_layout"/>
+            <include layout="@layout/file_shimmer_layout" />
 
-            <include layout="@layout/file_shimmer_layout"/>
+            <include layout="@layout/file_shimmer_layout" />
         </LinearLayout>
     </com.facebook.shimmer.ShimmerFrameLayout>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/file_recycler"
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_to_refresh_main"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:clipToPadding="false"
-        android:orientation="vertical"
-        android:paddingBottom="12dp"
-        android:visibility="gone"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:listitem="@layout/file_item" />
+        app:layout_constraintTop_toTopOf="parent">
+
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/file_recycler"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:orientation="vertical"
+            android:paddingBottom="12dp"
+            android:visibility="gone"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            tools:listitem="@layout/file_item" />
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/error_text_view"
+        style="@style/error_text_style"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

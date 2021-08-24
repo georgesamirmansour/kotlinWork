@@ -9,4 +9,5 @@ interface ServiceInterface {
 
     @GET("movies")
     fun getAllFiles(): Flowable<List<FileResponse>>
+
 }

@@ -1,6 +1,7 @@
 package com.example.nagwatask.di.module
 
-import com.example.nagwatask.data.mian.MainRepo
+import com.example.nagwatask.data.mian.DownloadFileRepository
+import com.example.nagwatask.data.mian.GetFileRepository
 import dagger.Module
 import dagger.Provides
 import javax.inject.Inject
@@ -11,5 +12,9 @@ class MainActivityModel @Inject constructor(private val networkModule: NetworkMo
 
     @Singleton
     @Provides
-    fun provideMainRepo(): MainRepo = MainRepo(networkModule)
+    fun provideMainRepo(): GetFileRepository = GetFileRepository(networkModule)
+
+    @Singleton
+    @Provides
+    fun provideDownloadFileRepo(): DownloadFileRepository = DownloadFileRepository(networkModule)
 }

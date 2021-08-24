@@ -1,12 +1,10 @@
 package com.example.nagwatask.data.mian
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.LiveDataReactiveStreams
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.Observer
 import com.example.nagwatask.di.module.NetworkModule
-import com.example.nagwatask.di.module.OkHttpClient
 import com.example.nagwatask.models.ApiState
 import com.example.nagwatask.models.ErrorState
 import com.example.nagwatask.models.LoadingState
@@ -17,7 +15,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
-class MainRepo @Inject constructor(private val networkModel: NetworkModule){
+class GetFileRepository @Inject constructor(private val networkModel: NetworkModule) {
 
     private val mediatorResponse: MediatorLiveData<ApiState<List<FileMapper>>> = MediatorLiveData()
 
@@ -25,9 +23,8 @@ class MainRepo @Inject constructor(private val networkModel: NetworkModule){
         mediatorResponse.value = LoadingState()
         val source: LiveData<ApiState<List<FileMapper>>> = LiveDataReactiveStreams.fromPublisher(
             networkModel.provideServiceInterface()
-                .getAllFiles().onErrorReturn { handleError(it) }.map { handleResponse(it) }
+                .getAllFiles().map { handleResponse(it) }.onErrorReturn { handleError(it) }
                 .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
         )
         mediatorResponse.addSource(source, Observer {
             mediatorResponse.value = it
@@ -36,10 +33,8 @@ class MainRepo @Inject constructor(private val networkModel: NetworkModule){
         return mediatorResponse
     }
 
-    private fun handleError(throwable: Throwable?): List<FileResponse> {
-        Log.e(MainRepo::class.simpleName, "handleError: ", throwable)
-        mediatorResponse.value = ErrorState(throwable?.stackTraceToString())
-        return ArrayList()
+    private fun handleError(it: Throwable): ApiState<List<FileMapper>> {
+        return ErrorState(it.stackTraceToString())
     }
 
     private fun handleResponse(response: List<FileResponse>): ApiState<List<FileMapper>> {

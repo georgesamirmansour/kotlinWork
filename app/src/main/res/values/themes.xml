@@ -26,6 +26,13 @@
         <item name="android:textColor">@android:color/darker_gray</item>
     </style>
 
+    <style name="error_text_style">
+        <item name="android:padding">12dp</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:fontFamily">sans-serif-condensed-medium</item>
+        <item name="android:textColor">@android:color/holo_red_light</item>
+    </style>
+
     <style name="button_style" parent="@style/Widget.MaterialComponents.Button.OutlinedButton.Icon">
         <item name="android:textSize">14sp</item>
         <item name="icon">@drawable/download_icon</item>

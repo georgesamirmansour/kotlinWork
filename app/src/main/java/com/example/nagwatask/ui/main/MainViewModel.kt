@@ -16,7 +16,6 @@ class MainViewModel @Inject constructor(
     private val downloadFileRepository: DownloadFileRepository
 ) : ViewModel() {
 
-
     private lateinit var fileMediatorMediator: MediatorLiveData<ApiState<List<FileMapper>>>
     private lateinit var downloadFileMediator: MediatorLiveData<ApiState<DownloadMapper>>
 

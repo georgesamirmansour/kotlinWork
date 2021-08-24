@@ -51,13 +51,10 @@
                 app:rippleColor="@color/black" />
 
 
-            <androidx.core.widget.ContentLoadingProgressBar
-                android:id="@+id/progress_content_loading_file_download"
-                style="?android:attr/progressBarStyleHorizontal"
+            <ProgressBar
+                android:id="@+id/progress_bar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:progress="0"
-                android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"/>

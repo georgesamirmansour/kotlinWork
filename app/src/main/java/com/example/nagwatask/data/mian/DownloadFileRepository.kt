@@ -1,5 +1,6 @@
 package com.example.nagwatask.data.mian
 
+import android.util.Log
 import androidx.lifecycle.MediatorLiveData
 import com.example.nagwatask.di.module.NetworkModule
 import com.example.nagwatask.models.*
@@ -14,21 +15,25 @@ import javax.inject.Inject
 
 class DownloadFileRepository @Inject constructor(private val networkModel: NetworkModule) {
 
-    private val mediatorResponse: MediatorLiveData<ApiState<DownloadMapper>> = MediatorLiveData()
+    private lateinit var mediatorResponse: MediatorLiveData<ApiState<DownloadMapper>>
 
     private var disposable: Disposable? = null
     fun downloadFile(url: String): MediatorLiveData<ApiState<DownloadMapper>> {
-        mediatorResponse.value = LoadingState()
+        mediatorResponse = MediatorLiveData()
+        mediatorResponse.value = ProgressState("0.0", DownloadMapper(null))
         disposable = url.download()
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeBy(
                 onNext = {
-                    mediatorResponse.value = ProgressState(it.percent().toString(), DownloadMapper(null))
+//                    val percent = (it.downloadSize / it.totalSize) *100
+//                    mediatorResponse.value = ProgressState(percent.toString(), DownloadMapper(null))
                 },
                 onComplete = {
+//                    Log.d(DownloadFileRepository::javaClass.name, "file downloaded")
                     mediatorResponse.value = SuccessState("", DownloadMapper(url.file()))
                 },
                 onError = {
+//                    Log.d(DownloadFileRepository::javaClass.name, "file not downloaded")
                     mediatorResponse.value = ErrorState(it.message)
                 }
             )

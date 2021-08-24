@@ -1,6 +1,7 @@
 package com.example.nagwatask.data.mian
 
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,11 +16,10 @@ import java.io.File
 class FileAdapter constructor(val context: Context, val clickListener: ClickListener<FileMapper>) :
     RecyclerView.Adapter<FileAdapter.FileViewHolder>() {
 
-    private val fileMapperList = mutableListOf<FileMapper>()
-
+    private var fileMapperList: List<FileMapper>? = null
+    private var downloading: Boolean = false
     fun setData(newList: List<FileMapper>) {
-        fileMapperList.clear()
-        fileMapperList.addAll(newList)
+        fileMapperList = newList
         notifyDataSetChanged()
 //        val diffCallback = RatingDiffCallback(fileMapperList, newList)
 //        val diffResult = DiffUtil.calculateDiff(diffCallback)
@@ -28,21 +28,37 @@ class FileAdapter constructor(val context: Context, val clickListener: ClickList
 //        diffResult.dispatchUpdatesTo(this)
     }
 
-    fun updateItem(downloadState: FileMapper.DownloadState, position: Int, percent: Double, file: File?) {
-        fileMapperList[position].downloadState = downloadState
-        fileMapperList[position].progressDownload = percent.toInt()
-        fileMapperList[position].file = file
+    fun updateItem(
+        downloadState: FileMapper.DownloadState,
+        position: Int,
+        percent: Double,
+        file: File?
+    ) {
+        fileMapperList!![position].downloadState = downloadState
+        fileMapperList!![position].progressDownload = percent.toInt()
+        fileMapperList!![position].file = file
+        Log.d(
+            FileAdapter::class.java.name,
+            "updateItem() called with: downloadState = $downloadState, position = $position, percent = $percent, file = $file"
+        )
+        if (downloadState == FileMapper.DownloadState.Downloaded || downloadState == FileMapper.DownloadState.NotStartedYet)
+            downloading = false;
         notifyItemChanged(position)
     }
 
+    override fun getItemId(position: Int): Long {
+        return fileMapperList!![position].id!!.toLong()
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FileViewHolder =
         FileViewHolder(FileItemBinding.inflate(LayoutInflater.from(parent.context), parent, false))
 
     override fun onBindViewHolder(holder: FileViewHolder, position: Int) =
-        holder.bind(fileMapperList[position])
+        holder.bind(fileMapperList!![position])
 
-    override fun getItemCount(): Int = fileMapperList.size
+    override fun getItemCount(): Int {
+        return if (fileMapperList == null) 0 else fileMapperList!!.size
+    }
 
     inner class FileViewHolder(private val itemBinding: FileItemBinding) :
         RecyclerView.ViewHolder(itemBinding.root) {
@@ -51,44 +67,44 @@ class FileAdapter constructor(val context: Context, val clickListener: ClickList
             changeButton(item)
             itemBinding.fileNameTextView.text = item.name
             itemBinding.fileTypeTextView.text = item.type
-            itemBinding.progressContentLoadingFileDownload.progress = item.progressDownload
+//            itemBinding.progressBar.progress = item.progressDownload
         }
 
         private fun clickOnButton(item: FileMapper) {
-            if (item.downloadState == FileMapper.DownloadState.NotStartedYet) {
+            if (item.downloadState == FileMapper.DownloadState.NotStartedYet && !downloading) {
                 item.let { model -> clickListener.onClickListener(model, adapterPosition) }
-                item.downloadState = FileMapper.DownloadState.Downloading
-//                downloading()
-                notifyItemChanged(adapterPosition)
-            }
+                downloading = true
+            }else if(item.downloadState == FileMapper.DownloadState.Downloaded)
+                item.let { model -> clickListener.onClickListener(model, adapterPosition) }
         }
 
         private fun changeButton(item: FileMapper) {
             when (item.downloadState) {
                 FileMapper.DownloadState.Downloaded -> downloaded()
                 FileMapper.DownloadState.Downloading -> downloading()
-                else -> notYetStarted()
+                FileMapper.DownloadState.NotStartedYet -> notYetStarted()
             }
         }
 
         private fun downloading() {
             itemBinding.downloadButton.visibility = View.GONE
-            itemBinding.progressContentLoadingFileDownload.visibility = View.VISIBLE
-            itemBinding.progressContentLoadingFileDownload.show()
+            itemBinding.progressBar.visibility = View.VISIBLE
         }
 
         private fun downloaded() {
             itemBinding.downloadButton.text = context.getString(R.string.open)
             itemBinding.downloadButton.icon =
                 AppCompatResources.getDrawable(context, R.drawable.check_icon)
-            itemBinding.progressContentLoadingFileDownload.hide()
+            itemBinding.progressBar.visibility = View.GONE
+            itemBinding.downloadButton.visibility = View.VISIBLE
         }
 
         private fun notYetStarted() {
             itemBinding.downloadButton.text = context.getString(R.string.download)
             itemBinding.downloadButton.icon =
                 AppCompatResources.getDrawable(context, R.drawable.download_icon)
-            itemBinding.progressContentLoadingFileDownload.hide()
+            itemBinding.progressBar.visibility = View.GONE
+            itemBinding.downloadButton.visibility = View.VISIBLE
         }
     }
 

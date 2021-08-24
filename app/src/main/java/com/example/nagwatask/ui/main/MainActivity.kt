@@ -15,6 +15,17 @@ import com.example.nagwatask.models.file.FileMapper
 import com.example.nagwatask.ui.MyApplication
 import javax.inject.Inject
 import java.io.File
+import android.widget.Toast
+
+import android.content.ActivityNotFoundException
+
+import android.content.Intent
+import android.net.Uri
+import android.util.Log
+
+import android.webkit.MimeTypeMap
+import androidx.core.content.FileProvider
+import androidx.core.net.toUri
 
 
 class MainActivity : AppCompatActivity(), ClickListener<FileMapper> {
@@ -42,6 +53,7 @@ class MainActivity : AppCompatActivity(), ClickListener<FileMapper> {
 
     private fun initAdapterWithRecycler() {
         fileAdapter = FileAdapter(applicationContext, this)
+        fileAdapter.setHasStableIds(false)
         binding.fileRecycler.adapter = fileAdapter
     }
 
@@ -82,12 +94,27 @@ class MainActivity : AppCompatActivity(), ClickListener<FileMapper> {
 
     override fun onClickListener(model: FileMapper, position: Int) {
         if (model.downloadState == FileMapper.DownloadState.Downloaded)
-            openFile(model.file!!)
+            openFile(model.file!!.toUri())
         else downloadFile(model.url, position)
     }
 
-    private fun openFile(file: File) {
-        
+
+    private fun openFile(uri: Uri?) {
+        val intent = Intent(Intent.ACTION_VIEW, uri)
+        intent.action = Intent.ACTION_VIEW
+        if (uri.toString().contains(".pdf")) {
+            intent.setDataAndType(uri, "application/pdf")
+        } else if (uri.toString().contains(".3gp") || uri.toString()
+                .contains(".mpg") || uri.toString().contains(".mpeg") || uri.toString()
+                .contains(".mpe") || uri.toString().contains(".mp4") || uri.toString()
+                .contains(".avi")
+        ) {
+            intent.setDataAndType(uri, "video/*")
+        } else {
+            intent.setDataAndType(uri, "*/*")
+        }
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        startActivity(intent)
     }
 
     private fun downloadFile(url: String, position: Int) {
@@ -98,24 +125,30 @@ class MainActivity : AppCompatActivity(), ClickListener<FileMapper> {
     private fun getDownloadFile(position: Int) {
         mainViewModel.getDownloadFile().observe(this, Observer {
             when (it) {
-                is SuccessState -> fileAdapter.updateItem(
-                    FileMapper.DownloadState.Downloaded,
-                    position,
-                    100.0,
-                    it.data!!.file!!
-                )
+                is SuccessState -> {
+                    fileAdapter.updateItem(
+                        FileMapper.DownloadState.Downloaded,
+                        position,
+                        100.0,
+                        it.data!!.file!!
+                    )
+                }
                 is ProgressState -> fileAdapter.updateItem(
                     FileMapper.DownloadState.Downloading,
                     position,
                     it.message!!.toDouble(),
                     null
                 )
-                else -> fileAdapter.updateItem(
-                    FileMapper.DownloadState.NotStartedYet,
-                    position,
-                    0.0,
-                    null
-                )
+                is ErrorState -> {
+                    fileAdapter.updateItem(
+                        FileMapper.DownloadState.NotStartedYet,
+                        position,
+                        0.0,
+                        null
+                    )
+                    Toast.makeText(this, "Can't download this file", Toast.LENGTH_LONG)
+                        .show()
+                }
             }
         })
     }

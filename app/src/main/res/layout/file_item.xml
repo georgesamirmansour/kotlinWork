@@ -59,6 +59,7 @@
                 app:constraint_referenced_ids="download_button,file_type_text_view" />
 
             <androidx.core.widget.ContentLoadingProgressBar
+                android:visibility="gone"
                 style="?android:attr/progressBarStyleHorizontal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

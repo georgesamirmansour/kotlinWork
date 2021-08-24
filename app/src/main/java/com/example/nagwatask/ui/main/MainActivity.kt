@@ -24,7 +24,7 @@ class MainActivity : AppCompatActivity(), ClickListener<FileMapper> {
         MyApplication().appComponent.inject(this)
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(R.layout.activity_main)
+        setContentView(binding.root)
         getDataFromApi()
         initAdapterWithRecycler()
     }
@@ -43,11 +43,13 @@ class MainActivity : AppCompatActivity(), ClickListener<FileMapper> {
     }
 
     private fun showShimmerEffect() {
+        binding.shimmerFileLayout.startShimmer()
         binding.shimmerFileLayout.visibility = View.VISIBLE
         binding.fileRecycler.visibility = View.GONE
     }
 
     private fun setDataToAdapter(data: List<FileMapper>) {
+        binding.shimmerFileLayout.stopShimmer()
         binding.shimmerFileLayout.visibility = View.GONE
         binding.fileRecycler.visibility = View.VISIBLE
         fileAdapter.setData(data)

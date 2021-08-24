@@ -38,6 +38,8 @@ class FileAdapter constructor(val context: Context, val clickListener: ClickList
         fun bind(item: FileMapper) {
             itemBinding.downloadButton.setOnClickListener { clickOnButton(item) }
             changeButton(item)
+            itemBinding.fileNameTextView.text = item.name
+            itemBinding.fileTypeTextView.text = item.type
 
         }
 

@@ -59,11 +59,12 @@
                 app:constraint_referenced_ids="download_button,file_type_text_view" />
 
             <androidx.core.widget.ContentLoadingProgressBar
-                android:visibility="gone"
+                android:visibility="visible"
+                android:id="@+id/progress_content_loading_file_download"
                 style="?android:attr/progressBarStyleHorizontal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:progress="20"
+                android:progress="40"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/download_barrier" />

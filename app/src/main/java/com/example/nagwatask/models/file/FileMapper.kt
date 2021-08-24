@@ -12,16 +12,13 @@ class FileMapper constructor(fileResponse: FileResponse){
         if(javaClass != other?.javaClass)
             return false;
         other as FileMapper
-        if(id !=other.id)
-            return false
-        if(downloading !=other.downloading)
-            return false
-        if(downloaded !=other.downloaded)
-            return false
-        if(url !=other.url)
-            return false
-        if(type !=other.type)
-            return false
-        return true
+        return when {
+            id !=other.id -> false
+            downloading !=other.downloading -> false
+            downloaded !=other.downloaded -> false
+            url !=other.url -> false
+            type !=other.type -> false
+            else -> true
+        }
     }
 }

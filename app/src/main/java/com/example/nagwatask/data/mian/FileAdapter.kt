@@ -74,7 +74,7 @@ class FileAdapter constructor(val context: Context, val clickListener: ClickList
             if (item.downloadState == FileMapper.DownloadState.NotStartedYet && !downloading) {
                 item.let { model -> clickListener.onClickListener(model, adapterPosition) }
                 downloading = true
-            }else if(item.downloadState == FileMapper.DownloadState.Downloaded)
+            } else if (item.downloadState == FileMapper.DownloadState.Downloaded)
                 item.let { model -> clickListener.onClickListener(model, adapterPosition) }
         }
 

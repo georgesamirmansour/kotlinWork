@@ -16,8 +16,8 @@ import javax.inject.Inject
 class DownloadFileRepository @Inject constructor(private val networkModel: NetworkModule) {
 
     private lateinit var mediatorResponse: MediatorLiveData<ApiState<DownloadMapper>>
-
     private var disposable: Disposable? = null
+
     fun downloadFile(url: String): MediatorLiveData<ApiState<DownloadMapper>> {
         mediatorResponse = MediatorLiveData()
         mediatorResponse.value = ProgressState("0.0", DownloadMapper(null))
@@ -25,12 +25,15 @@ class DownloadFileRepository @Inject constructor(private val networkModel: Netwo
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeBy(
                 onNext = {
-//                    val percent = (it.downloadSize / it.totalSize) *100
-//                    mediatorResponse.value = ProgressState(percent.toString(), DownloadMapper(null))
+                    val percent = (it.downloadSize / it.totalSize) *100
+                    //mediatorResponse.value = ProgressState(percent.toString(), DownloadMapper(null))
+
+                    Log.d("Progress", percent.toString())
                 },
                 onComplete = {
 //                    Log.d(DownloadFileRepository::javaClass.name, "file downloaded")
                     mediatorResponse.value = SuccessState("", DownloadMapper(url.file()))
+                    Log.d("File", url.file().absolutePath)
                 },
                 onError = {
 //                    Log.d(DownloadFileRepository::javaClass.name, "file not downloaded")

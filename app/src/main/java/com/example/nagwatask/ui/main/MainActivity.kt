@@ -21,11 +21,13 @@ import android.content.ActivityNotFoundException
 
 import android.content.Intent
 import android.net.Uri
+import android.os.Environment
 import android.util.Log
 
 import android.webkit.MimeTypeMap
 import androidx.core.content.FileProvider
 import androidx.core.net.toUri
+import com.example.nagwatask.BuildConfig
 
 
 class MainActivity : AppCompatActivity(), ClickListener<FileMapper> {
@@ -93,8 +95,18 @@ class MainActivity : AppCompatActivity(), ClickListener<FileMapper> {
     }
 
     override fun onClickListener(model: FileMapper, position: Int) {
-        if (model.downloadState == FileMapper.DownloadState.Downloaded)
-            openFile(model.file!!.toUri())
+        if (model.downloadState == FileMapper.DownloadState.Downloaded) {
+
+            val uri = model.file?.let {
+                FileProvider.getUriForFile(
+                    this,
+                    applicationContext.packageName.toString() + ".provider",
+                    it,
+                    it.name
+                )
+            }
+            openFile(uri)
+        }
         else downloadFile(model.url, position)
     }
 
@@ -102,6 +114,7 @@ class MainActivity : AppCompatActivity(), ClickListener<FileMapper> {
     private fun openFile(uri: Uri?) {
         val intent = Intent(Intent.ACTION_VIEW, uri)
         intent.action = Intent.ACTION_VIEW
+        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
         if (uri.toString().contains(".pdf")) {
             intent.setDataAndType(uri, "application/pdf")
         } else if (uri.toString().contains(".3gp") || uri.toString()

@@ -11,18 +11,6 @@ class FileMapper constructor(fileResponse: FileResponse){
     var progressDownload: Int = 0
     var file: File? = null
 
-    override fun equals(other: Any?): Boolean {
-        if(javaClass != other?.javaClass)
-            return false;
-        other as FileMapper
-        return when {
-            id !=other.id -> false
-            downloadState !=other.downloadState -> false
-            url !=other.url -> false
-            type !=other.type -> false
-            else -> true
-        }
-    }
     enum class DownloadState{
         Downloaded, Downloading, NotStartedYet
     }

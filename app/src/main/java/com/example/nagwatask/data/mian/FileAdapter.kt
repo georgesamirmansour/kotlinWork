@@ -21,11 +21,6 @@ class FileAdapter constructor(val context: Context, val clickListener: ClickList
     fun setData(newList: List<FileMapper>) {
         fileMapperList = newList
         notifyDataSetChanged()
-//        val diffCallback = RatingDiffCallback(fileMapperList, newList)
-//        val diffResult = DiffUtil.calculateDiff(diffCallback)
-//        fileMapperList.clear()
-//        fileMapperList.addAll(newList)
-//        diffResult.dispatchUpdatesTo(this)
     }
 
     fun updateItem(
@@ -107,30 +102,4 @@ class FileAdapter constructor(val context: Context, val clickListener: ClickList
             itemBinding.downloadButton.visibility = View.VISIBLE
         }
     }
-
-
-//    class RatingDiffCallback(
-//        private val oldList: List<FileMapper>,
-//        private val newList: List<FileMapper>
-//    ) : DiffUtil.Callback() {
-//
-//        override fun getOldListSize(): Int = oldList.size
-//
-//        override fun getNewListSize(): Int = newList.size
-//
-//        override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-//            return oldList[oldItemPosition].id === newList[newItemPosition].id
-//        }
-//
-//        override fun areContentsTheSame(oldPosition: Int, newPosition: Int): Boolean {
-//            return oldList[oldPosition] == newList[newPosition]
-//        }
-//
-//        @Nullable
-//        override fun getChangePayload(oldPosition: Int, newPosition: Int): Any? {
-//            return super.getChangePayload(oldPosition, newPosition)
-//        }
-//    }
-
-
 }
